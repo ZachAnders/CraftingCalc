@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		{% block head %}
+		<link href="static/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
+		<script src="static/jquery/jquery-1.11.0.js"></script>
+		<script src="static/bootstrap/js/bootstrap.js"></script>
+		{% block includes %}{% endblock %}
+		<title>{% block title %}{% endblock %}</title>
+		{% endblock %}
+	</head>
+
+	<body onload="{% block onload %}{% endblock %}">
+		<div class='container'>
+			<nav class='navbar navbar-default' role='navigation'>
+				<a class='navbar-brand'>Crafting Calculator</a>
+				<div class='collapse navbar-collapse navbar-ex1-collapse'>
+					<ul class='nav navbar-nav'>
+						{% if logged_in %}
+						<li class='active'>
+							<a href='calc'>Home</a>
+						</li>
+						<li>
+							<a href='logout'>Logout</a>
+						</li>
+						{% else %}
+						<li class='active'>
+							<a href='login'>Login</a>
+						</li>
+						{% endif %}
+					</ul>
+				</div>
+			</nav>
+
+			<div> {% block body %}{% endblock %} </div>
+		</div>
+	</body>
+</html>

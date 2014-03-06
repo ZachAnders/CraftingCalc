@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %} Crafting Calculator {% endblock %}
+{% block includes %}
+<link href="static/style.css" rel="stylesheet">
+<script src="static/calc.js"></script>
+{% endblock %}
+{% block onload %}
+select_tab(2)
+{% endblock %}
+{% block body %}
+	<div class="col-md-12 col-md-offset-0">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="btn-group pull-right">
+					<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></button>
+					<button type="button" class="btn btn-success">Show Queue</button>
+				</div>
+				<h4>
+					Test
+				</h4>
+			</div>
+				<ul class="nav nav-tabs">
+					<li id="tab_0" class="active"><a href="#" onclick="select_tab(0)">Overview</a></li>
+					<li id="tab_1"><a href="#" onclick="select_tab(1)">Resources</a></li>
+					<li id="tab_2"><a href="#" onclick="select_tab(2)">Projects</a></li>
+				</ul>
+			<div class="panel-body">
+				<div id="pane_0">
+					DOOM 1
+				</div>
+				<div id="pane_1" class="hidden">
+					<h2>Gold</h2>
+					Add gold to your worker's reserve, so they can pull from it to craft magic items.
+					</br>
+					</br>
+					Current Gold Value: <b>123</b>
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Add Gold...">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button">Add</button>
+							</span>
+						</div>
+					<h2>Experience</h2>
+					Add experience to your worker's reserve. There are two ways to add experience:
+					</br>
+					</br>
+					Current Experience Value: <b>123456</b>
+						<h4>Add experience directly</h4>
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Add Experience...">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button">Add</button>
+							</span>
+						</div>
+						<h4>Add experience from an item based on value</h4>
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Item value...">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button">Add</button>
+							</span>
+						</div>
+				</div>
+				<div id="pane_2" class="hidden">
+					Wrights:
+					<table id="wrights" class="table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Job</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Bob</td>
+								<td>Potato</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
