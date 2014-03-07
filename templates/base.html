@@ -24,8 +24,11 @@
 							<a href='logout'>Logout</a>
 						</li>
 						{% else %}
-						<li class='active'>
+						<li class='{{ login_style }}'>
 							<a href='login'>Login</a>
+						</li>
+						<li class='{{ create_style }}'>
+							<a href='create_acct'>Create an account</a>
 						</li>
 						{% endif %}
 					</ul>

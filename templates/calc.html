@@ -22,47 +22,107 @@ calc_onload({{ current_tab }})
 				</ul>
 			<div class="panel-body">
 				<div id="pane_0">
-					DOOM 1
+				{% if user.jobs %}
+					Active Jobs:
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-primary" onclick="pass_time(0)">Populate</button>
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#apply_time">Apply time</button>
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Gold Cost</th>
+								<th>Xp Cost</th>
+								<th>Time Remaining</th>
+								<th>Worker</th>
+								<th>Progress</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for job in user.jobs %}
+								{% if job.wright %}
+									<tr>
+										<td>
+											{{ job.Name }}
+										</td>
+										<td>
+											{{ job.GoldCost }}
+										</td>
+										<td>
+											{{ job.XpCost}}
+										</td>
+										<td>
+											{{ job.TimeCost}}
+										</td>
+										<td>
+											{{ job.wright.Name }}
+										</td>
+										<td style="width:60%">
+											<div class="progress progress-striped active">
+												<div class="progress-bar activate_tooltips" role="progressbar" aria-valuenow="{{ job.get_completion_percentage() }}"
+													aria-valuemin="0" aria-valuemax="100" style="width: {{ job.get_completion_percentage() }}%;">
+													<div class="sr-only">
+														{{ job.TimeCost }} remaining
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								{% endif %}
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					No jobs! :(
+				{% endif %}
+				{% include "apply_time.html" %}
 				</div>
 				<div id="pane_1" class="hidden">
 					<h2>Gold</h2>
 					Add gold to your worker's reserve, so they can pull from it to craft magic items.
-					</br>
-					</br>
-					Current Gold Value: <b>{{ user.GoldPool }}</b>
+					<br>
+					<br>
+					Current Gold Value: <b id="gold_value">{{ user.GoldPool }}</b>
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Add Gold...">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="button">Add</button>
-							</span>
+							<form onsubmit="return add_gold('gold_input')">
+								<input id="gold_input" type="text" class="form-control" placeholder="Add Gold...">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit">Add</button>
+								</span>
+							</form>
 						</div>
 					<h2>Experience</h2>
 					Add experience to your worker's reserve. There are two ways to add experience:
-					</br>
-					</br>
-					Current Experience Value: <b>{{ user.XpPool }}</b>
+					<br>
+					<br>
+					Current Experience Value: <b id="exp_value">{{ user.XpPool }}</b>
 						<h4>Add experience directly</h4>
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Add Experience...">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="button">Add</button>
-							</span>
+							<form onsubmit="return add_exp('xp_direct_input', 1)">
+								<input id="xp_direct_input" type="text" class="form-control" placeholder="Add Experience...">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit">Add</button>
+								</span>
+							</form>
 						</div>
 						<h4>Add experience from an item based on value</h4>
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Item value...">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="button">Add</button>
-							</span>
+							<form onsubmit="return add_exp('xp_item_input', 25)">
+								<input id="xp_item_input" type="text" class="form-control" placeholder="Item value...">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="submit">Add</button>
+								</span>
+							</form>
 						</div>
 				</div>
 				<div id="pane_2" class="hidden">
 					<div class="btn-group pull-right">
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#wright_builder">Add Wright</button>
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#job_builder">Add Job</button>
-						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#job_queue">Show Job Queue</button>
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#job_queue">Show All Jobs</button>
 					</div>
-					{% if wrights %}
+					{% if user.wrights %}
 						Wrights:
 						<table id="wrights" class="table">
 							<thead>
@@ -74,8 +134,8 @@ calc_onload({{ current_tab }})
 								</tr>
 							</thead>
 							<tbody>
-								{% for wright in wrights %}
-									<tr>
+								{% for wright in user.wrights %}
+									<tr id="wright_{{ wright.Id }}">
 										<td style="width: 40px;">
 											<button type="button" class="btn btn-danger btn-sm" onclick="del_wright({{ wright.Id }})">
 												<span class="glyphicon glyphicon-remove"></span>
@@ -87,7 +147,7 @@ calc_onload({{ current_tab }})
 										<td>
 											{{ wright.Name}}
 										</td>
-										<td>{{ Nope }}</td>
+										<td></td>
 									</tr>
 								{% endfor %}
 							</tbody>
@@ -96,6 +156,8 @@ calc_onload({{ current_tab }})
 						Uh oh! You don't have any wrights!
 					{% endif %}
 					{% include "wright_builder.html" %}
+					{% include "job_builder.html" %}
+					{% include "job_queue.html" %}
 				</div>
 			</div>
 		</div>

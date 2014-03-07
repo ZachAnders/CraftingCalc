@@ -23,10 +23,17 @@ class Job(Base):
 	Name = Column(String(64))
 	GoldCost = Column(Integer)
 	TimeCost = Column(Integer)
+	TimeStart = Column(Integer)
 	XpCost = Column(Integer)
 	Notes = Column(Text)
 	owner = relationship("User", foreign_keys="Job.OwnerId")
 	wright = relationship("Wright", foreign_keys="Job.WrightId")
+	
+	def get_completion_percentage(self):
+		if not self.TimeStart:
+			return 100
+		percent = (self.TimeCost*100)/self.TimeStart
+		return int( 100 - percent)
 
 class User(Base):
 	__tablename__ = "User"
@@ -36,8 +43,9 @@ class User(Base):
 	Timestamp = Column(Integer)
 	XpPool = Column(Integer)
 	GoldPool = Column(Integer)
-	wrights = relationship("Wright", uselist=False, backref="User")
-	jobs = relationship("Job", uselist=False, backref="User")
+	CurrentTimeVal = Column(Integer)
+	wrights = relationship("Wright", backref="User")
+	jobs = relationship("Job", backref="User")
 
 if __name__ == "__main__":
 	sess = DbSession()

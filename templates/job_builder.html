@@ -1,0 +1,46 @@
+<div class="modal fade" id="job_builder">
+	<div class="modal-dialog">
+		<form id="add_job_form" class="form-horizontal" role="form" onsubmit="return add_job()" autocomplete="off">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Create a new Job!</h4>
+				</div>
+				<div class="modal-body">
+					<div id="job_error_alert" class="alert alert-danger hidden" ></div>
+					<div class="form-group">
+						<label for="wright_name" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="name" id="name" placeholder="Name...">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="wright_name" class="col-sm-2 control-label">Base Price</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="base_price" id="price" placeholder="Price...">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="wright_name" class="col-sm-2 control-label">Adjustments</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="gold_adjust" id="gp_adj" placeholder="Gold Adjustments...">
+							<input type="text" class="form-control" name="exp_adjust" id="exp_adj" placeholder="Exp Adjustments...">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="wright_name" class="col-sm-2 control-label">Notes</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="notes" id="notes" placeholder="Notes (optional)...">
+						</div>
+					</div>
+					<div class="form-group">
+						<input type="checkbox" name="mage_armor" value="1"> Is magic arms or armor?
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Add Job!</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</form>
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

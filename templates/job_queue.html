@@ -1,0 +1,73 @@
+<div class="modal fade" id="job_queue">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Show all jobs</h4>
+			</div>
+			<div class="modal-body">
+				{% if user.jobs %}
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Status</th>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Gold Cost</th>
+								<th>Xp Cost</th>
+								<th>Time Cost</th>
+								<th>Worker</th>
+								<th>Notes</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for job in user.jobs %}
+								<tr id="job_{{ job.Id }}">
+									<td style="width: 40px;">
+										{% if job.TimeCost == 0 %}
+											<button type="button" class="btn btn-success btn-sm" onclick="del_job({{ job.Id }})">
+												<span class="glyphicon glyphicon-ok"></span>
+											</button>
+										{% else %}
+											<button type="button" class="btn btn-danger btn-sm" onclick="del_job({{ job.Id }})">
+												<span class="glyphicon glyphicon-remove"></span>
+											</button>
+										{% endif %}
+									</td>
+									<td>
+										{{ job.Id }}
+									</td>
+									<td>
+										{{ job.Name }}
+									</td>
+									<td>
+										{{ job.GoldCost }}
+									</td>
+									<td>
+										{{ job.XpCost}}
+									</td>
+									<td>
+										{{ job.TimeCost}}
+									</td>
+									<td>
+									{% if job.wright %}
+										{{ job.wright.Name }}
+									{% else %}
+										(None)
+									{% endif %}
+									</td>
+									<td>
+										{{ job.Notes}}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					No jobs! :(
+				{% endif %}
+
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
