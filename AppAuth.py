@@ -24,7 +24,7 @@ def requires_session(some_route):
 		if valid_session():
 			return some_route(*args, **kwargs)
 		else:
-			return render_template("error.html")
+			return render_template("login.html", error="Please login before continuing.")
 	return protected
 
 def valid_session():
