@@ -16,7 +16,7 @@
 				<a class='navbar-brand'>Crafting Calculator</a>
 				<div class='collapse navbar-collapse navbar-ex1-collapse'>
 					<ul class='nav navbar-nav'>
-						{% if logged_in %}
+						{% if user %}
 						<li class='active'>
 							<a href='calc'>Home</a>
 						</li>
@@ -29,7 +29,11 @@
 						</li>
 						{% endif %}
 					</ul>
+						{% if user %}
+							<p class="navbar-text navbar-right"> Welcome {{ user.Username }} </p>
+						{% endif %}
 				</div>
+
 			</nav>
 
 			<div> {% block body %}{% endblock %} </div>

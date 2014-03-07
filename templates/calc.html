@@ -5,16 +5,12 @@
 <script src="static/calc.js"></script>
 {% endblock %}
 {% block onload %}
-select_tab(2)
+calc_onload({{ current_tab }})
 {% endblock %}
 {% block body %}
 	<div class="col-md-12 col-md-offset-0">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<div class="btn-group pull-right">
-					<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></button>
-					<button type="button" class="btn btn-success">Show Queue</button>
-				</div>
 				<h4>
 					Test
 				</h4>
@@ -33,7 +29,7 @@ select_tab(2)
 					Add gold to your worker's reserve, so they can pull from it to craft magic items.
 					</br>
 					</br>
-					Current Gold Value: <b>123</b>
+					Current Gold Value: <b>{{ user.GoldPool }}</b>
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Add Gold...">
 							<span class="input-group-btn">
@@ -44,7 +40,7 @@ select_tab(2)
 					Add experience to your worker's reserve. There are two ways to add experience:
 					</br>
 					</br>
-					Current Experience Value: <b>123456</b>
+					Current Experience Value: <b>{{ user.XpPool }}</b>
 						<h4>Add experience directly</h4>
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Add Experience...">
@@ -61,23 +57,45 @@ select_tab(2)
 						</div>
 				</div>
 				<div id="pane_2" class="hidden">
-					Wrights:
-					<table id="wrights" class="table">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Name</th>
-								<th>Job</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Bob</td>
-								<td>Potato</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="btn-group pull-right">
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#wright_builder">Add Wright</button>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#job_builder">Add Job</button>
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#job_queue">Show Job Queue</button>
+					</div>
+					{% if wrights %}
+						Wrights:
+						<table id="wrights" class="table">
+							<thead>
+								<tr>
+									<th></th>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Job</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for wright in wrights %}
+									<tr>
+										<td style="width: 40px;">
+											<button type="button" class="btn btn-danger btn-sm" onclick="del_wright({{ wright.Id }})">
+												<span class="glyphicon glyphicon-remove"></span>
+											</button>
+										</td>
+										<td>
+											{{ wright.Id }}
+										</td>
+										<td>
+											{{ wright.Name}}
+										</td>
+										<td>{{ Nope }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% else %}
+						Uh oh! You don't have any wrights!
+					{% endif %}
+					{% include "wright_builder.html" %}
 				</div>
 			</div>
 		</div>

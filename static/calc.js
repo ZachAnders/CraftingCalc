@@ -6,3 +6,13 @@ function select_tab(tab_id) {
 	$("#tab_" + tab_id).addClass("active");
 	$("#pane_" + tab_id).removeClass("hidden");
 }
+
+function calc_onload(tab_num) {
+	select_tab(tab_num);
+}
+
+function del_wright(wright_id) {
+	$.post("/rm_wright", { "wright_id" : wright_id }).done(function(data) {
+		location.reload();
+	});
+}
