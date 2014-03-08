@@ -205,11 +205,11 @@ def pass_time():
 	session["next_tab"] = 0
 	return redirect(url_for("calc"))
 
+app.secret_key = os.urandom(128)
+
 if __name__ == "__main__":
 	app.debug = True
 	if app.debug:
 		app.secret_key = '\xe5\x1e\xe8\xc7h\xccr\x9c7\xee|dN\x85\x8c{-4<\xa5\xe5\x03\xc7?\x16\xc3\x181+\xab\xf3q'
-	else:
-		app.secret_key = os.urandom(128)
 	app.run()
 
