@@ -34,6 +34,7 @@ calc_onload({{ current_tab }})
 								<th>Name</th>
 								<th>Gold Cost</th>
 								<th>Xp Cost</th>
+								<th>Priority</th>
 								<th>Time Remaining</th>
 								<th>Worker</th>
 								<th>Progress</th>
@@ -51,6 +52,9 @@ calc_onload({{ current_tab }})
 										</td>
 										<td>
 											{{ job.XpCost}}
+										</td>
+										<td>
+											{{ job.Priority }}
 										</td>
 										<td>
 											{{ job.TimeCost}}

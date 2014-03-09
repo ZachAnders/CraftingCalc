@@ -62,7 +62,6 @@ def calc():
 		del session["next_tab"]
 	else:
 		current_tab = 0
-
 	return render_template("calc.html", user=user, current_tab=current_tab)
 
 @app.route("/add_wright", methods=['POST'])
@@ -111,45 +110,39 @@ def modify_resources():
 def add_job():
 	sess = DbSession().get_session()
 	user = get_user(sess, session["username"])
-	j_gp_adj, j_xp_adj, j_notes, j_magearmor = 0, 0, "", 0
+	new_job = Job()
+	new_job.OwnerId = user.Id
+	
+	#j_gp_adj, j_xp_adj, j_notes, j_magearmor = 0, 0, "", 0
 	
 	post = request.form
 	try:
-		j_name, j_price = post["name"], int(post["base_price"])
-		if "gold_adjust" in post and post["gold_adjust"] != "":
-			j_gp_adj = int(post["gold_adjust"])
-		if "exp_adjust" in post and post["exp_adjust"] != "":
-			j_xp_adj = int(post["exp_adjust"])
-		if "notes" in post:
-			j_notes = post["notes"]
+		new_job.Name = post["name"]
+		base_price = int(post["base_price"])
+		new_job.GoldCost = (base_price/2)*.75
+		new_job.XpCost = (base_price/25)*.75
+		new_job.TimeCost = math.ceil((base_price/1000)*.75)
+		new_job.TimeStart = new_job.TimeCost
+
 		if "mage_armor" in post:
-			j_magearmor = int(post["mage_armor"])
+			if int(post["mage_armor"]):
+				new_job.XpCost /= 2
+		if "notes" in post:
+			new_job.Notes = post["notes"]
+		if "priority" in post:
+			new_job.Priority = int(post["priority"])
+		if "exp_adjust" in post and post["exp_adjust"] != "":
+			new_job.XpCost += int(post["exp_adjust"])
+		if "gold_adjust" in post and post["gold_adjust"] != "":
+			new_job.GoldCost += min(0, int(post["gold_adjust"]))
 	except ValueError:
 		return jsonify({"status":0, "error":"Double check fields. Integers only please."}) 
 
-	total_gold = min(0, ((j_price/2)*.75) + j_gp_adj)
-	total_xp = (j_price/25)*.75
-	total_time = math.ceil((j_price/1000)*.75)
+	if user.GoldPool < new_job.GoldCost:
+		return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, new_job.GoldCost)}) 
+	if user.XpPool < new_job.XpCost:
+		return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, new_job.XpCost)}) 
 
-	if j_magearmor == 1:
-		total_xp /= 2
-	total_xp += j_xp_adj
-
-	if user.GoldPool < total_gold:
-		return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, total_gold)}) 
-	if user.XpPool < total_xp:
-		return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, total_xp)}) 
-
-	user.GoldPool -= total_gold
-	user.XpPool -= total_xp
-	new_job = Job()
-	new_job.OwnerId = user.Id
-	new_job.Name = j_name
-	new_job.GoldCost = math.ceil(total_gold)
-	new_job.XpCost = math.ceil(total_xp)
-	new_job.TimeCost = math.ceil(total_time)
-	new_job.TimeStart = new_job.TimeCost
-	new_job.Notes = j_notes
 	sess.add(new_job)
 	sess.commit()
 	session["next_tab"] = 2
@@ -179,7 +172,7 @@ def pass_time():
 		job_completed = False
 		free_wrights = [wright for wright in user.wrights if not wright.currentJob]
 		available_jobs = [job for job in user.jobs if not job.wright and job.TimeCost != 0]
-		available_jobs = sorted(available_jobs, key=lambda job: job.TimeCost)
+		available_jobs = sorted(available_jobs, key=lambda job: -job.Priority)
 		if len(free_wrights) == len(user.wrights) and len(available_jobs) == 0:
 			break
 		for wright in free_wrights:
@@ -212,4 +205,3 @@ if __name__ == "__main__":
 	if app.debug:
 		app.secret_key = '\xe5\x1e\xe8\xc7h\xccr\x9c7\xee|dN\x85\x8c{-4<\xa5\xe5\x03\xc7?\x16\xc3\x181+\xab\xf3q'
 	app.run()
-

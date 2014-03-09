@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from DbSession import DbSession
@@ -21,6 +21,7 @@ class Job(Base):
 	OwnerId = Column(Integer, ForeignKey("User.Id"))
 	WrightId = Column(Integer, ForeignKey("Wright.Id"))
 	Name = Column(String(64))
+	Priority = Column(Integer)
 	GoldCost = Column(Integer)
 	TimeCost = Column(Integer)
 	TimeStart = Column(Integer)
@@ -33,7 +34,7 @@ class Job(Base):
 		if not self.TimeStart:
 			return 100
 		percent = (self.TimeCost*100)/self.TimeStart
-		return int( 100 - percent)
+		return int(100 - percent)
 
 class User(Base):
 	__tablename__ = "User"

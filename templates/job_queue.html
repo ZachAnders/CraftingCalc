@@ -16,6 +16,7 @@
 								<th>Gold Cost</th>
 								<th>Xp Cost</th>
 								<th>Time Cost</th>
+								<th>Priority</th>
 								<th>Worker</th>
 								<th>Notes</th>
 							</tr>
@@ -48,6 +49,9 @@
 									</td>
 									<td>
 										{{ job.TimeCost}}
+									</td>
+									<td>
+										{{ job.Priority }}
 									</td>
 									<td>
 									{% if job.wright %}
