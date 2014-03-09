@@ -5,6 +5,8 @@ function select_tab(tab_id) {
 	}
 	$("#tab_" + tab_id).addClass("active");
 	$("#pane_" + tab_id).removeClass("hidden");
+	add_gold_val(0);
+	add_xp_val(0);
 }
 
 function calc_onload(tab_num) {
@@ -20,18 +22,26 @@ function del_wright(wright_id) {
 function add_gold(form) {
 	val = $("#" + form).val();
 	console.log(val);
+	add_gold_val(val);
+	return false;
+}
+
+function add_gold_val(val) {
 	$.post("/calc/modify_resources", {"action":"add_gold", "value":val}).done(function(data) {
 		$("#gold_value").text(data.value);
 	}, "json");
-	return false;
+}
+
+function add_xp_val(val) {
+	$.post("/calc/modify_resources", {"action":"add_exp", "value":val}).done(function(data) {
+		$("#exp_value").text(data.value);
+	}, "json");
 }
 
 function add_exp(form, divisor) {
 	val = $("#" + form).val();
 	val = Math.floor(val/divisor);
-	$.post("/calc/modify_resources", {"action":"add_exp", "value":val}).done(function(data) {
-		$("#exp_value").text(data.value);
-	}, "json");
+	add_xp_val(0);
 	return false;
 
 }
