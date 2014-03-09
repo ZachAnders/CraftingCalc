@@ -16,7 +16,7 @@ function calc_onload(tab_num) {
 }
 
 function del_wright(wright_id) {
-	$.post("/calc/del_wright", { "id" : wright_id }).done(function(data) {
+	$.post("del_wright", { "id" : wright_id }).done(function(data) {
 		$("#wright_" + wright_id).remove();
 	});
 }
@@ -29,13 +29,13 @@ function add_gold(form) {
 }
 
 function add_gold_val(val) {
-	$.post("/calc/modify_resources", {"action":"add_gold", "value":val}).done(function(data) {
+	$.post("modify_resources", {"action":"add_gold", "value":val}).done(function(data) {
 		$("#gold_value").text(data.value);
 	}, "json");
 }
 
 function add_xp_val(val) {
-	$.post("/calc/modify_resources", {"action":"add_exp", "value":val}).done(function(data) {
+	$.post("modify_resources", {"action":"add_exp", "value":val}).done(function(data) {
 		$("#exp_value").text(data.value);
 	}, "json");
 }
@@ -50,7 +50,7 @@ function add_exp(form, divisor) {
 
 function add_job() {
 	vals = $("#add_job_form").serialize()
-	$.post("/calc/add_job", vals).done(function(data) {
+	$.post("add_job", vals).done(function(data) {
 		console.log(data);
 		if (data.status == 0) {
 			alert = $("#job_error_alert")
@@ -64,13 +64,13 @@ function add_job() {
 }
 
 function del_job(job_id) {
-	$.post("/calc/del_job", { "id" : job_id }).done(function(data) {
+	$.post("del_job", { "id" : job_id }).done(function(data) {
 		$("#job_" + job_id).remove();
 	});
 }
 
 function pass_time(val) {
-	$.post("/calc/pass_time", { "value" : val}).done(function(data) {
+	$.post("pass_time", { "value" : val}).done(function(data) {
 		location.reload();
 	});
 }
