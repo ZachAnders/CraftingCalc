@@ -113,8 +113,6 @@ def add_job():
 	new_job = Job()
 	new_job.OwnerId = user.Id
 	
-	#j_gp_adj, j_xp_adj, j_notes, j_magearmor = 0, 0, "", 0
-	
 	post = request.form
 	try:
 		new_job.Name = post["name"]
@@ -127,6 +125,8 @@ def add_job():
 		if "mage_armor" in post:
 			if int(post["mage_armor"]):
 				new_job.XpCost /= 2
+		if "gp_multi" in post:
+			new_job.GoldCost *= int(post["gp_multi"])
 		if "notes" in post:
 			new_job.Notes = post["notes"]
 		if "priority" in post:
@@ -134,7 +134,7 @@ def add_job():
 		if "exp_adjust" in post and post["exp_adjust"] != "":
 			new_job.XpCost += int(post["exp_adjust"])
 		if "gold_adjust" in post and post["gold_adjust"] != "":
-			new_job.GoldCost += min(0, int(post["gold_adjust"]))
+			new_job.GoldCost = min(0, new_job.GoldCost + int(post["gold_adjust"]))
 	except ValueError:
 		return jsonify({"status":0, "error":"Double check fields. Integers only please."}) 
 
@@ -142,6 +142,9 @@ def add_job():
 		return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, new_job.GoldCost)}) 
 	if user.XpPool < new_job.XpCost:
 		return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, new_job.XpCost)}) 
+
+	user.GoldPool -= new_job.GoldCost
+	user.XpPool -= new_job.XpCost
 
 	sess.add(new_job)
 	sess.commit()
