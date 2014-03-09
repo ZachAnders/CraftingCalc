@@ -121,6 +121,7 @@ def add_job():
 		new_job.XpCost = (base_price/25)*.75
 		new_job.TimeCost = math.ceil((base_price/1000)*.75)
 		new_job.TimeStart = new_job.TimeCost
+		new_job.Priority = 1
 
 		if "mage_armor" in post:
 			if int(post["mage_armor"]):
@@ -129,7 +130,7 @@ def add_job():
 			new_job.GoldCost *= int(post["gp_multi"])
 		if "notes" in post:
 			new_job.Notes = post["notes"]
-		if "priority" in post:
+		if "priority" in post and post["priority"] != "":
 			new_job.Priority = int(post["priority"])
 		if "exp_adjust" in post and post["exp_adjust"] != "":
 			new_job.XpCost += int(post["exp_adjust"])
