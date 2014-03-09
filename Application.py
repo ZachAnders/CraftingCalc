@@ -119,7 +119,7 @@ def add_job():
 		base_price = int(post["base_price"])
 		new_job.GoldCost = math.ceil((base_price/2.0)*.75)
 		new_job.XpCost = math.ceil((base_price/25.0)*.75)
-		new_job.TimeCost = math.ceil((base_price/1000.0)*.75)
+		new_job.TimeCost = max(1, math.ceil((base_price/1000.0)*.75))
 		new_job.TimeStart = new_job.TimeCost
 		new_job.Priority = 1
 
