@@ -117,15 +117,15 @@ def add_job():
 	try:
 		new_job.Name = post["name"]
 		base_price = int(post["base_price"])
-		new_job.GoldCost = (base_price/2)*.75
-		new_job.XpCost = (base_price/25)*.75
-		new_job.TimeCost = math.ceil((base_price/1000)*.75)
+		new_job.GoldCost = math.ceil((base_price/2.0)*.75)
+		new_job.XpCost = math.ceil((base_price/25.0)*.75)
+		new_job.TimeCost = math.ceil((base_price/1000.0)*.75)
 		new_job.TimeStart = new_job.TimeCost
 		new_job.Priority = 1
 
 		if "mage_armor" in post:
 			if int(post["mage_armor"]):
-				new_job.XpCost /= 2
+				new_job.XpCost /= 2.0
 		if "gp_multi" in post:
 			new_job.GoldCost *= float(post["gp_multi"])
 		if "notes" in post:
@@ -135,7 +135,7 @@ def add_job():
 		if "exp_adjust" in post and post["exp_adjust"] != "":
 			new_job.XpCost += int(post["exp_adjust"])
 		if "gold_adjust" in post and post["gold_adjust"] != "":
-			new_job.GoldCost = min(0, new_job.GoldCost + int(post["gold_adjust"]))
+			new_job.GoldCost = max(0, new_job.GoldCost + int(post["gold_adjust"]))
 	except ValueError:
 		return jsonify({"status":0, "error":"Double check fields. Integers only please."}) 
 
@@ -205,6 +205,7 @@ def pass_time():
 app.secret_key = os.urandom(128)
 
 if __name__ == "__main__":
+	app.config["APPLICATION_ROOT"] = "/calc"
 	app.debug = True
 	if app.debug:
 		app.secret_key = '\xe5\x1e\xe8\xc7h\xccr\x9c7\xee|dN\x85\x8c{-4<\xa5\xe5\x03\xc7?\x16\xc3\x181+\xab\xf3q'
