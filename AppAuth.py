@@ -40,7 +40,7 @@ def has_valid_credentials(username, passw):
 	db_sess = DbSession().get_session()
 
 	user = get_user(db_sess, username)
-	if passlib_ctx.verify(passw, user.Password):
+	if user and passlib_ctx.verify(passw, user.Password):
 		user.Timestamp = time.time()
 		db_sess.commit()
 		return True
