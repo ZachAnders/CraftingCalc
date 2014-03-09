@@ -5,8 +5,10 @@ function select_tab(tab_id) {
 	}
 	$("#tab_" + tab_id).addClass("active");
 	$("#pane_" + tab_id).removeClass("hidden");
-	add_gold_val(0);
-	add_xp_val(0);
+	if (tab_id == 1) {
+		add_gold_val(0);
+		add_xp_val(0);
+	}
 }
 
 function calc_onload(tab_num) {
