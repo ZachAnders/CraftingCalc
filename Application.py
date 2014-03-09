@@ -127,7 +127,7 @@ def add_job():
 			if int(post["mage_armor"]):
 				new_job.XpCost /= 2
 		if "gp_multi" in post:
-			new_job.GoldCost *= int(post["gp_multi"])
+			new_job.GoldCost *= float(post["gp_multi"])
 		if "notes" in post:
 			new_job.Notes = post["notes"]
 		if "priority" in post and post["priority"] != "":
