@@ -43,7 +43,7 @@ function add_xp_val(val) {
 function add_exp(form, divisor) {
 	val = $("#" + form).val();
 	val = Math.floor(val/divisor);
-	add_xp_val(0);
+	add_xp_val(val);
 	return false;
 
 }
