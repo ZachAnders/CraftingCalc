@@ -48,6 +48,9 @@ class User(Base):
 	wrights = relationship("Wright", backref="User")
 	jobs = relationship("Job", backref="User")
 
+	def num_jobs_completed(self):
+		return sum([1 for job in self.jobs if job.TimeCost == 0])
+
 if __name__ == "__main__":
 	sess = DbSession()
 	sess.build_tables(Base)

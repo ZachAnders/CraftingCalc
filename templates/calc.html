@@ -124,7 +124,7 @@ calc_onload({{ current_tab }})
 					<div class="btn-group pull-right">
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#wright_builder">Add Wright</button>
 						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#job_builder">Add Job</button>
-						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#job_queue">Show All Jobs</button>
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#job_queue">Show All Jobs <span class="badge">{{ user.num_jobs_completed()  }}</span></button>
 					</div>
 					{% if user.wrights %}
 						Wrights:
