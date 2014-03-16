@@ -11,6 +11,14 @@ class DbSession():
 	def build_tables(self, base):
 		base.metadata.create_all(self.eng)
 
+def extract_field(row_dict, key, default=None):
+	if key in row_dict and row_dict[key] != "":
+		if default != None:
+			return type(default)(row_dict[key])
+		else:
+			return row_dict[key]
+	return default
+
 if __name__ == "__main__":
 	print "Testing"
 	tester = DbSession()

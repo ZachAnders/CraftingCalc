@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 import os
-import math
 from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify
 from AppAuth import has_valid_credentials, requires_session, create_user, get_user
-from DbSession import DbSession
+from DbSession import DbSession, extract_field
 from CalcSchema import Wright, User, Job
 app = Flask(__name__)
 
@@ -110,45 +109,28 @@ def modify_resources():
 def add_job():
 	sess = DbSession().get_session()
 	user = get_user(sess, session["username"])
-	new_job = Job()
-	new_job.OwnerId = user.Id
-	
 	post = request.form
-	try:
-		new_job.Name = post["name"]
-		base_price = int(post["base_price"])
-		new_job.GoldCost = math.ceil((base_price/2.0)*.75)
-		new_job.XpCost = math.ceil((base_price/25.0)*.75)
-		new_job.TimeCost = max(1, math.ceil((base_price/1000.0)*.75))
-		new_job.TimeStart = new_job.TimeCost
-		new_job.Priority = 1
+	quantity = extract_field(post, 'qty_adj', 1)
+	for job_num in range(quantity):
+		new_job = Job()
+		new_job.OwnerId = user.Id
 
-		if "mage_armor" in post:
-			if int(post["mage_armor"]):
-				new_job.XpCost /= 2.0
-		if "gp_multi" in post:
-			new_job.GoldCost *= float(post["gp_multi"])
-		if "notes" in post:
-			new_job.Notes = post["notes"]
-		if "priority" in post and post["priority"] != "":
-			new_job.Priority = int(post["priority"])
-		if "exp_adjust" in post and post["exp_adjust"] != "":
-			new_job.XpCost += int(post["exp_adjust"])
-		if "gold_adjust" in post and post["gold_adjust"] != "":
-			new_job.GoldCost = max(0, new_job.GoldCost + int(post["gold_adjust"]))
-	except ValueError:
-		return jsonify({"status":0, "error":"Double check fields. Integers only please."}) 
+		if not new_job.populate(post):
+			return jsonify({"status":0, "error":"Double check fields. Integers only please."}) 
+		if job_num > 0:
+			new_job.Name += " %d" % (job_num+1)
 
-	if user.GoldPool < new_job.GoldCost:
-		return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, new_job.GoldCost)}) 
-	if user.XpPool < new_job.XpCost:
-		return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, new_job.XpCost)}) 
+		if user.GoldPool < (new_job.GoldCost*quantity):
+			return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, new_job.GoldCost*quantity)}) 
+		if user.XpPool < (new_job.XpCost*quantity):
+			return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, new_job.XpCost*quantity)}) 
 
-	user.GoldPool -= new_job.GoldCost
-	user.XpPool -= new_job.XpCost
+		user.GoldPool -= new_job.GoldCost
+		user.XpPool -= new_job.XpCost
 
-	sess.add(new_job)
-	sess.commit()
+		sess.add(new_job)
+		sess.commit()
+
 	session["next_tab"] = 2
 	return jsonify({"status":1})
 
@@ -172,6 +154,8 @@ def pass_time():
 	user = get_user(sess, session["username"])
 
 	time_to_pass = int(request.form["value"])
+	if time_to_pass < 0:
+		return redirect(url_for("calc"))
 	while True:
 		job_completed = False
 		free_wrights = [wright for wright in user.wrights if not wright.currentJob]
