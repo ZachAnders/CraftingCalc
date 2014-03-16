@@ -190,8 +190,11 @@ def pass_time():
 app.secret_key = os.urandom(128)
 
 if __name__ == "__main__":
-	if not os.path.exists("./production"):
+	if "PRODUCTION" in os.environ and bool(os.environ["PRODUCTION"]):
+		print("Environment: Production")
+	else:
+		print("Environment: Development")
 		app.debug = True
-	if app.debug:
 		app.secret_key = '\xe5\x1e\xe8\xc7h\xccr\x9c7\xee|dN\x85\x8c{-4<\xa5\xe5\x03\xc7?\x16\xc3\x181+\xab\xf3q'
 	app.run()
+
