@@ -120,16 +120,17 @@ def add_job():
 		if job_num > 0:
 			new_job.Name += " %d" % (job_num+1)
 
-		if user.GoldPool < (new_job.GoldCost*quantity):
-			return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, new_job.GoldCost*quantity)}) 
-		if user.XpPool < (new_job.XpCost*quantity):
-			return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, new_job.XpCost*quantity)}) 
+		if job_num == 0:
+			if user.GoldPool < (new_job.GoldCost*quantity):
+				return jsonify({"status":0, "error":"Insufficient Gold. Gold remaining: %d. Needed: %d." % (user.GoldPool, new_job.GoldCost*quantity)}) 
+			if user.XpPool < (new_job.XpCost*quantity):
+				return jsonify({"status":0, "error":"Insufficient Experience. Experience remaining: %d. Needed: %d." % (user.XpPool, new_job.XpCost*quantity)}) 
 
 		user.GoldPool -= new_job.GoldCost
 		user.XpPool -= new_job.XpCost
 
 		sess.add(new_job)
-		sess.commit()
+	sess.commit()
 
 	session["next_tab"] = 2
 	return jsonify({"status":1})
